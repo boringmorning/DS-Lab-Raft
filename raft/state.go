@@ -118,6 +118,13 @@ func (rs *raftState) getLogs(startId uint64) []*pb.Entry {
 	}
 
 	lastLog := rs.logs[len(rs.logs)-1]
+
+	// mark: invalid id
+	if startId <= 0 || startId > lastLog.GetId() {
+		return []*pb.Entry{}
+	}
+	//
+
 	logIdDiff := int(lastLog.GetId() - startId)
 	if len(rs.logs)-1-logIdDiff < 0 {
 		return []*pb.Entry{}
